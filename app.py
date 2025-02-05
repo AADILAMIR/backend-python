@@ -34,7 +34,7 @@ def index():
     logger.debug("Accessed index route")
     return jsonify({"message": "Welcome to the Python Flask API!"})
 
-@app.route('/api/add')
+@app.route('/api/add', methods=['GET'])
 def add_data():
     try:
         # Example MongoDB write
@@ -47,7 +47,7 @@ def add_data():
         logger.error(f"Error in add_data route: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/data')
+@app.route('/api/data', methods=['GET'])
 def get_data():
     try:
         # Fetch data from MongoDB
@@ -59,7 +59,7 @@ def get_data():
         logger.error(f"Error in get_data route: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/mongo-test')
+@app.route('/api/mongo-test', methods=['GET'])
 def mongo_test():
     try:
         # Test MongoDB connection
@@ -69,6 +69,26 @@ def mongo_test():
         return jsonify({"message": "MongoDB is working!"})
     except Exception as e:
         logger.error(f"MongoDB test failed: {e}")
+        return jsonify({"error": str(e)}), 500
+
+# ✅ NEW POST ROUTE TO ADD DATA
+@app.route('/api/add-data', methods=['POST'])
+def add_new_data():
+    try:
+        # Parse JSON data from the request
+        data = request.json
+
+        # Validate if data is provided
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
+        # Insert into MongoDB
+        collection.insert_one(data)
+        logger.debug(f"Inserted data: {data}")
+
+        return jsonify({"message": "Data successfully added!", "data": data}), 201
+    except Exception as e:
+        logger.error(f"Error in add_new_data route: {e}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
