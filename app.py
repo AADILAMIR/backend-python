@@ -29,12 +29,12 @@ except Exception as e:
     logger.error(f"Error connecting to MongoDB: {e}")
     raise SystemExit("Exiting application due to MongoDB connection failure.")
 
-@app.route('/')
+@app.route('/api/')
 def index():
     logger.debug("Accessed index route")
     return jsonify({"message": "Welcome to the Python Flask API!"})
 
-@app.route('/add')
+@app.route('/api/add')
 def add_data():
     try:
         # Example MongoDB write
@@ -47,7 +47,7 @@ def add_data():
         logger.error(f"Error in add_data route: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/data')
+@app.route('/api/data')
 def get_data():
     try:
         # Fetch data from MongoDB
@@ -59,7 +59,7 @@ def get_data():
         logger.error(f"Error in get_data route: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/mongo-test')
+@app.route('/api/mongo-test')
 def mongo_test():
     try:
         # Test MongoDB connection
